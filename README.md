@@ -1,4 +1,4 @@
-# Ember-jquery-date-range-picker
+# ember-jquery-date-range-picker
 
 This README outlines the details of collaborating on this Ember addon.
 
