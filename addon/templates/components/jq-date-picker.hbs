@@ -1,3 +1,15 @@
 
+<input style="display: none" placeholder="{{timeString}}"/>
 
-<input class="ember-date-picker" value=rawValue />
+<div class="time-container{{if showButton '' ' clickable'}}" {{action 'containerOpenClose' bubbles=false}}>
+	<span class="time">{{startTimeString}}</span>
+
+	{{#if isDateRange}}
+		<span class="time">{{endTimeString}}</span>
+	{{/if}}
+
+	{{#if showButton}}
+		<a class="button c-icon calendar-icon" {{action 'openClose' bubbles=false}}>{{buttonText}}</a>
+	{{/if}}
+</div>
+
