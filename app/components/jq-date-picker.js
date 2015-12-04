@@ -1,0 +1,1 @@
+export { default } from 'ember-jquery-date-range-picker/components/jq-date-picker';
