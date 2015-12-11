@@ -4,6 +4,7 @@ import layout from '../templates/components/jq-date-picker';
 export default Ember.Component.extend(
 {
 	classNames: ['js-date-picker'],
+	classNameBindings: ['isDateRange::single'],
 
 	layout: layout,
 
@@ -150,25 +151,34 @@ export default Ember.Component.extend(
 
 	convertTimeToVal: function(el, start, end)
 	{
-		var startTime = null;
+		var startTime = '';
 		if(typeof start === 'number')
 		{
 			startTime = window.moment.utc(start*1000).format(this.get('format'));
 		}
 		
-		var endTime = null;
+		var endTime = '';
 		if(typeof end === 'number')
 		{
 			endTime = window.moment.utc(end*1000).format(this.get('format'));
 		}
-
-		if(!Ember.isNone(startTime) && !Ember.isNone(endTime))
+		else
 		{
-			el.data('dateRangePicker').setDateRange(startTime, endTime);
+			endTime = startTime;
 		}
-		else if(!Ember.isNone(startTime))
+
+		el.data('dateRangePicker').setDateRange(startTime, endTime);
+	},
+	
+	timezone: function(timestamp)
+	{
+		if(timestamp !== undefined)
 		{
-			el.data('dateRangePicker').setDate(startTime);
+			return window.moment(timestamp*1000).add(window.moment(timestamp*1000).utcOffset(), 'minutes').utcOffset()*60;
+		}
+		else
+		{
+			return window.moment().add(window.moment().utcOffset(), 'minutes').utcOffset()*60;
 		}
 	},
 
@@ -177,13 +187,19 @@ export default Ember.Component.extend(
 		var time1, time2;
 		if(obj.date1 !== undefined)
 		{
-			time1 = window.moment.utc(obj.date1.valueOf()).unix();
+			let unixTime = obj.date1.valueOf()/1000;
+				unixTime = unixTime + this.timezone(unixTime);
+
+			time1 = window.moment.utc(unixTime*1000).unix();
 			this.set('startDate', time1);
 		}
 
 		if(obj.date2 !== undefined)
 		{
-			time2 = window.moment.utc(obj.date2.valueOf()).endOf('day').unix();
+			let unixTime = obj.date2.valueOf()/1000;
+				unixTime = unixTime + this.timezone(unixTime);
+
+			time2 = window.moment.utc(unixTime*1000).endOf('day').unix();
 			this.set('endDate', time2);
 		}
 
