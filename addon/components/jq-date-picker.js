@@ -29,11 +29,16 @@ export default Ember.Component.extend(
 
 	showTopbar: false,
 	selectForward: false,
+	singleDate: false,
 
 	isOpen: false,
 
 	showButton: false,
 	buttonText: '',
+
+	startOfWeek: 'sunday',
+
+	beforeShowDay: null,
 
 	isDateRange: function()
 	{
@@ -69,7 +74,8 @@ export default Ember.Component.extend(
 	
 	setup: Ember.on('didInsertElement', function()
 	{
-		var _pickerElement = this.$();
+		var _this = this;
+		var _pickerElement = this.$().find('input');
 
 		var opts = {
 			format: this.get('format'),
@@ -78,6 +84,7 @@ export default Ember.Component.extend(
 			customTopBar: this.get('titleBar'),
 			showTopbar: this.get('showTopbar'),
 			selectForward: this.get('selectForward'),
+			startOfWeek: this.get('startOfWeek'),
 			time: {
 				enabled: this.get('showTime')
 			}
@@ -103,11 +110,30 @@ export default Ember.Component.extend(
 			opts.maxDays = this.get('maxDays');
 		}
 
-		var _this = this;
+		if(!Ember.isNone(this.get('beforeShowDay')))
+		{
+			Ember.assert('beforeShowDay must be a function that returns an array [isSelectable, className, option tooltip]', typeof this.get('beforeShowDay') === 'function');
+
+			opts.beforeShowDay = function()
+			{
+				return _this.get('beforeShowDay').apply(_this.get('targetObject'), arguments);
+			};
+		}
+
 		_pickerElement.dateRangePicker(opts)
+			.bind('datepicker-first-date-selected', function(event, obj)
+			{
+				if(_this.get('singleDate'))
+				{
+					_this.dateChanged(event, obj);
+				}
+			})
 			.bind('datepicker-change', function(event, obj)
 			{
-				_this.dateChanged(event, obj);
+				if(!_this.get('singleDate'))
+				{
+					_this.dateChanged(event, obj);
+				}
 			})
 			.bind('datepicker-closed', function()
 			{
@@ -151,28 +177,33 @@ export default Ember.Component.extend(
 		if(obj.date1 !== undefined)
 		{
 			time1 = window.moment.utc(obj.date1.valueOf()).unix();
+			this.set('startDate', time1);
 		}
 
 		if(obj.date2 !== undefined)
 		{
 			time2 = window.moment.utc(obj.date2.valueOf()).endOf('day').unix();
+			this.set('endDate', time2);
 		}
 
-		this.set('startDate', time1);
-		this.set('endDate', time2);
 
 		this.sendAction('onChange', time1, time2);
 	},
+
+	teardown: Ember.on('willDestroyElement', function()
+	{
+		this.$().find('input').data('dateRangePicker').destroy();
+	}),
 
 	toggle: function()
 	{
 		if(this.get('isOpen'))
 		{
-			this.$().data('dateRangePicker').close();
+			this.$().find('input').data('dateRangePicker').close();
 		}
 		else
 		{
-			this.$().data('dateRangePicker').open();
+			this.$().find('input').data('dateRangePicker').open();
 		}
 	},
 
