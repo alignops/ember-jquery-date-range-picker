@@ -1,11 +1,11 @@
 
-<input style="position:absolute;visibility:hidden;height:100%" placeholder="{{timeString}}"/>
+<input style="position:absolute;visibility:hidden;height:100%;width:100%;" placeholder="{{timeString}}"/>
 
 <div class="time-container{{if showButton '' ' clickable'}}" {{action 'containerOpenClose' bubbles=false}}>
-	<span class="time">{{startTimeString}}</span>
+	<span class="time" {{action 'containerOpenClose' bubbles=false}}>{{startTimeString}}</span>
 
 	{{#if isDateRange}}
-		<span class="time">{{endTimeString}}</span>
+		<span class="time" {{action 'containerOpenClose' bubbles=false}}>{{endTimeString}}</span>
 	{{/if}}
 
 	{{#if showButton}}

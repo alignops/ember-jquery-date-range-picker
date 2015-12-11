@@ -39,6 +39,7 @@ export default Ember.Component.extend(
 	startOfWeek: 'sunday',
 
 	beforeShowDay: null,
+	allowOpen: true,
 
 	isDateRange: function()
 	{
@@ -211,7 +212,7 @@ export default Ember.Component.extend(
 
 		containerOpenClose: function()
 		{
-			if(!this.get('showButton'))
+			if(this.get('allowOpen') || !this.get('showButton'))
 			{
 				this.toggle();
 			}
