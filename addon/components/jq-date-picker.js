@@ -42,6 +42,8 @@ export default Ember.Component.extend(
 	beforeShowDay: null,
 	allowOpen: true,
 
+	stickyMonths: false,
+
 	isDateRange: function()
 	{
 		if(!Ember.isNone(this.get('startDate')) && !Ember.isNone(this.get('endDate')))
@@ -87,6 +89,7 @@ export default Ember.Component.extend(
 			showTopbar: this.get('showTopbar'),
 			selectForward: this.get('selectForward'),
 			startOfWeek: this.get('startOfWeek'),
+			stickyMonths: this.get('stickyMonths'),
 			time: {
 				enabled: this.get('showTime')
 			}
