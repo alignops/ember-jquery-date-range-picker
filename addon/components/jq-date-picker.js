@@ -128,14 +128,14 @@ export default Ember.Component.extend(
 		_pickerElement.dateRangePicker(opts)
 			.bind('datepicker-first-date-selected', function(event, obj)
 			{
-				if(_this.get('singleDate'))
+				if(_this.get('singleDate') && _this.get('isDateRange'))
 				{
 					_this.dateChanged(event, obj);
 				}
 			})
 			.bind('datepicker-change', function(event, obj)
 			{
-				if(!_this.get('singleDate'))
+				if(!_this.get('singleDate') || !_this.get('isDateRange'))
 				{
 					_this.dateChanged(event, obj);
 				}
