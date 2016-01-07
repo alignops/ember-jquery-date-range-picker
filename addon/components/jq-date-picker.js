@@ -44,6 +44,21 @@ export default Ember.Component.extend(
 
 	stickyMonths: false,
 
+	inputStyle: function()
+	{
+		var css = 'position:absolute;visibility:hidden;height:100%;left:0;';
+		
+		if(this.get('isDateRange'))
+		{
+			css += 'width:100%;';
+		}
+		else
+		{
+			css += 'width: 275px;';
+		}
+		return new Ember.Handlebars.SafeString(css);
+	}.property('isDateRange'),
+
 	isDateRange: function()
 	{
 		if(!Ember.isNone(this.get('startDate')) && !Ember.isNone(this.get('endDate')))

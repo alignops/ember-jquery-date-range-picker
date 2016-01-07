@@ -1,5 +1,5 @@
 
-<input style="position:absolute;visibility:hidden;height:100%;left:0;{{if isDateRange 'width:100%;' 'width: 275px;'}}" placeholder="{{timeString}}"/>
+<input style={{inputStyle}} placeholder="{{timeString}}"/>
 
 <div class="time-container{{if showButton '' ' clickable'}}" {{action 'containerOpenClose' bubbles=false}}>
 	<span class="time" {{action 'containerOpenClose' bubbles=false}}>{{startTimeString}}</span>
