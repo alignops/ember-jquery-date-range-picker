@@ -43,6 +43,7 @@ export default Ember.Component.extend(
 	allowOpen: true,
 
 	stickyMonths: false,
+	_picker: null,
 
 	inputStyle: function()
 	{
@@ -95,6 +96,7 @@ export default Ember.Component.extend(
 	{
 		var _this = this;
 		var _pickerElement = this.$().find('input');
+		this.set('_picker', _pickerElement);
 
 		var opts = {
 			format: this.get('format'),
@@ -221,24 +223,29 @@ export default Ember.Component.extend(
 			this.set('endDate', time2);
 		}
 
-
 		this.sendAction('onChange', time1, time2);
 	},
 
 	teardown: Ember.on('willDestroyElement', function()
 	{
-		this.$().find('input').data('dateRangePicker').destroy();
+		if(!Ember.isNone(this.get('_picker')))
+		{
+			this.get('_picker').data('dateRangePicker').destroy();
+		}
 	}),
 
 	toggle: function()
 	{
-		if(this.get('isOpen'))
+		if(!Ember.isNone(this.get('_picker')))
 		{
-			this.$().find('input').data('dateRangePicker').close();
-		}
-		else
-		{
-			this.$().find('input').data('dateRangePicker').open();
+			if(this.get('isOpen'))
+			{
+				this.get('_picker').data('dateRangePicker').close();
+			}
+			else
+			{
+				this.get('_picker').data('dateRangePicker').open();
+			}
 		}
 	},
 

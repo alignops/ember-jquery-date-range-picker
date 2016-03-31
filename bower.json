@@ -12,6 +12,6 @@
     "jquery": "^1.11.3",
     "loader.js": "ember-cli/loader.js#3.4.0",
     "qunit": "~1.20.0",
-    "jquery-date-range-picker": "https://github.com/sstephens/jquery-date-range-picker.git#~0.0.9"
+    "jquery-date-range-picker": "https://github.com/sstephens/jquery-date-range-picker.git#~v0.1.4"
   }
 }
