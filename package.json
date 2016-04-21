@@ -1,6 +1,6 @@
 {
   "name": "ember-jquery-date-range-picker",
-  "version": "2.5.10",
+  "version": "2.5.11",
   "description": "The default blueprint for ember-cli addons.",
   "directories": {
     "doc": "doc",
