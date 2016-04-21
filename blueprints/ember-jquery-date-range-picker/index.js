@@ -2,8 +2,8 @@
 module.exports = {
 	normalizeEntityName: function() {},
 
-	afterInstall: function() 
+	afterInstall: function()
 	{
-		return this.addBowerPackageToProject('https://github.com/sstephens/jquery-date-range-picker.git', '~0.0.9');
+		return this.addBowerPackageToProject('https://github.com/sstephens/jquery-date-range-picker.git', '1.0.5');
 	}
 };
