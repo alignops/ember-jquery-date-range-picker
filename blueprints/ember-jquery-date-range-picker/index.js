@@ -4,6 +4,6 @@ module.exports = {
 
 	afterInstall: function()
 	{
-		return this.addBowerPackageToProject('jquery-date-range-picker', 'v1.0.5');
+		return this.addBowerPackageToProject('jquery-date-range-picker', 'v1.0.6');
 	}
 };
