@@ -8,7 +8,7 @@ module.exports = {
 	{
 		this._super.included(app);
 
-		this.app.import(app.bowerDirectory + '/jquery-date-range-picker/jquery.daterangepicker.js');
-		this.app.import(app.bowerDirectory + '/jquery-date-range-picker/daterangepicker.css');
+		this.app.import(app.bowerDirectory + '/jquery-date-picker/jquery.daterangepicker.js');
+		this.app.import(app.bowerDirectory + '/jquery-date-picker/daterangepicker.css');
 	}
 };
