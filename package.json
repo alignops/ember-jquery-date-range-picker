@@ -1,7 +1,7 @@
 {
   "name": "ember-jquery-date-range-picker",
   "version": "2.5.12",
-  "description": "The default blueprint for ember-cli addons.",
+  "description": "Ember addon for jquery date range picker",
   "directories": {
     "doc": "doc",
     "test": "tests"
@@ -11,11 +11,11 @@
     "start": "ember server",
     "test": "ember try:testall"
   },
-  "repository": "git@github.com:sstephens/ember-jquery-date-range-picker.git",
+  "repository": "git@github.com:busybusy/ember-jquery-date-range-picker.git",
   "engines": {
     "node": ">= 0.10.0"
   },
-  "author": "Sean Stephens",
+  "author": "busy inc",
   "license": "MIT",
   "devDependencies": {
     "broccoli-asset-rev": "^2.4.2",
@@ -39,7 +39,8 @@
     "loader.js": "^4.0.1"
   },
   "keywords": [
-    "ember-addon"
+    "ember-addon",
+	"busybusy"
   ],
   "dependencies": {
     "ember-cli-htmlbars": "^1.0.3",

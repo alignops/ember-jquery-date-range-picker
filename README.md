@@ -1,4 +1,7 @@
 # Ember jQuery Date Range Picker
+[![npm version](https://badge.fury.io/js/ember-jquery-date-range-picker.svg)](https://badge.fury.io/js/ember-jquery-date-range-picker)
+[![Build Status](https://travis-ci.org/busybusy/ember-jquery-date-range-picker.svg?branch=master)](https://travis-ci.org/busybusy/ember-jquery-date-range-picker)
+[![Ember Observer Score](https://emberobserver.com/badges/ember-jquery-date-range-picker.svg)](https://emberobserver.com/addons/ember-jquery-date-range-picker)
 [![Ember badge][ember-badge]][embadge]
 
 This is an addon package fo ember-cli
