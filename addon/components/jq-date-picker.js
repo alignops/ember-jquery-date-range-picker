@@ -1,8 +1,8 @@
 import Ember from 'ember';
 import layout from '../templates/components/jq-date-picker';
+import moment from 'moment';
 
-export default Ember.Component.extend(
-{
+export default Ember.Component.extend({
 	classNames: ['js-date-picker'],
 	classNameBindings: ['isDateRange::single'],
 
@@ -45,57 +45,42 @@ export default Ember.Component.extend(
 	stickyMonths: false,
 	_picker: null,
 
-	inputStyle: function()
-	{
-		var css = 'position:absolute;visibility:hidden;height:100%;left:0;';
-		
-		if(this.get('isDateRange'))
-		{
+	inputStyle: Ember.computed('isDateRange', function() {
+		let css = 'position:absolute;visibility:hidden;height:100%;left:0;';
+		if (this.get('isDateRange')) {
 			css += 'width:100%;';
-		}
-		else
-		{
+		} else {
 			css += 'width: 275px;';
 		}
-		return new Ember.Handlebars.SafeString(css);
-	}.property('isDateRange'),
+		return Ember.String.htmlSafe(css);
+	}),
 
-	isDateRange: function()
-	{
-		if(!Ember.isNone(this.get('startDate')) && !Ember.isNone(this.get('endDate')))
-		{
+	isDateRange: Ember.computed('startDate', 'endDate', function() {
+		if (!Ember.isNone(this.get('startDate')) && !Ember.isNone(this.get('endDate'))) {
 			this.set('showTime', false);
 			return true;
 		}
-		
 		return false;
-	}.property('startDate', 'endDate'),
+	}),
 
-	startTimeString: function()
-	{
-		var time = '';
-		if(!Ember.isNone(this.get('startDate')))
-		{
-			time = window.moment.utc(this.get('startDate')*1000).format(this.get('format'));
+	startTimeString: Ember.computed('start', function() {
+		let time = '';
+		if (!Ember.isNone(this.get('startDate'))) {
+			time = moment.utc(this.get('startDate')*1000).format(this.get('format'));
 		}
 		return time;
-	}.property('startDate'),
-	
-	endTimeString: function()
-	{
-		var time = '';
-		if(!Ember.isNone(this.get('endDate')))
-		{
-			time = window.moment.utc(this.get('endDate')*1000).format(this.get('format'));
-		}
+	}),
 
+	endTimeString: Ember.computed('endDate', function() {
+		let time = '';
+		if (!Ember.isNone(this.get('endDate'))) {
+			time = moment.utc(this.get('endDate')*1000).format(this.get('format'));
+		}
 		return time;
-	}.property('endDate'),
-	
-	setup: Ember.on('didInsertElement', function()
-	{
-		var _this = this;
-		var _pickerElement = this.$().find('input');
+	}),
+
+	setup: Ember.on('didInsertElement', function() {
+		const _pickerElement = this.$().find('input');
 		this.set('_picker', _pickerElement);
 
 		var opts = {
@@ -112,156 +97,121 @@ export default Ember.Component.extend(
 			}
 		};
 
-		if(!Ember.isNone(this.get('minDate')))
-		{
-			opts.startDate = window.moment.utc(this.get('minDate')*1000).format(this.get('format'));
+		if (!Ember.isNone(this.get('minDate'))) {
+			opts.startDate = moment.utc(this.get('minDate')*1000).format(this.get('format'));
 		}
 
-		if(!Ember.isNone(this.get('minDays')))
-		{
+		if (!Ember.isNone(this.get('minDays'))) {
 			opts.minDays = this.get('minDays');
 		}
-		
-		if(!Ember.isNone(this.get('maxDate')))
-		{
-			opts.endDate = window.moment.utc(this.get('maxDate')*1000).format(this.get('format'));
+
+		if (!Ember.isNone(this.get('maxDate'))) {
+			opts.endDate = moment.utc(this.get('maxDate')*1000).format(this.get('format'));
 		}
 
-		if(!Ember.isNone(this.get('maxDays')))
-		{
+		if (!Ember.isNone(this.get('maxDays'))) {
 			opts.maxDays = this.get('maxDays');
 		}
 
-		if(!Ember.isNone(this.get('beforeShowDay')))
-		{
+		if (!Ember.isNone(this.get('beforeShowDay'))) {
 			Ember.assert('beforeShowDay must be a function that returns an array [isSelectable, className, option tooltip]', typeof this.get('beforeShowDay') === 'function');
 
-			opts.beforeShowDay = function()
-			{
-				return _this.get('beforeShowDay').apply(_this.get('targetObject'), arguments);
+			opts.beforeShowDay = () => {
+				return this.get('beforeShowDay').apply(this.get('targetObject'), arguments);
 			};
 		}
 
 		_pickerElement.dateRangePicker(opts)
-			.bind('datepicker-first-date-selected', function(event, obj)
-			{
-				if(_this.get('singleDate') && _this.get('isDateRange'))
-				{
-					_this.dateChanged(event, obj);
-				}
-			})
-			.bind('datepicker-change', function(event, obj)
-			{
-				if(!_this.get('singleDate') || !_this.get('isDateRange'))
-				{
-					_this.dateChanged(event, obj);
-				}
-			})
-			.bind('datepicker-closed', function()
-			{
-				_this.set('isOpen', false);
-			})
-			.bind('datepicker-opened', function()
-			{
-				_this.set('isOpen', true);
-			});
+		.bind('datepicker-first-date-selected', (event, obj) => {
+			if (this.get('singleDate') && this.get('isDateRange')) {
+				this.dateChanged(event, obj);
+			}
+		})
+		.bind('datepicker-change', (event, obj) => {
+			if (!this.get('singleDate') || !this.get('isDateRange')) {
+				this.dateChanged(event, obj);
+			}
+		})
+		.bind('datepicker-closed', () => {
+			this.set('isOpen', false);
+		})
+		.bind('datepicker-opened', () => {
+			this.set('isOpen', true);
+		});
 
 		this.convertTimeToVal(_pickerElement, this.get('startDate'), this.get('endDate'));
 	}),
 
-	convertTimeToVal: function(el, start, end)
-	{
-		var startTime = '';
-		if(typeof start === 'number')
-		{
-			startTime = window.moment.utc(start*1000).format(this.get('format'));
+	convertTimeToVal(el, start, end) {
+		let startTime = '';
+		if (typeof start === 'number') {
+			startTime = moment.utc(start*1000).format(this.get('format'));
 		}
-		
-		var endTime = '';
-		if(typeof end === 'number')
-		{
-			endTime = window.moment.utc(end*1000).format(this.get('format'));
-		}
-		else
-		{
+
+		let endTime = '';
+		if (typeof end === 'number') {
+			endTime = moment.utc(end*1000).format(this.get('format'));
+		} else {
 			endTime = startTime;
 		}
 
 		el.data('dateRangePicker').setDateRange(startTime, endTime);
 	},
-	
-	timezone: function(timestamp)
-	{
-		if(timestamp !== undefined)
-		{
-			return window.moment(timestamp*1000).add(window.moment(timestamp*1000).utcOffset(), 'minutes').utcOffset()*60;
-		}
-		else
-		{
-			return window.moment().add(window.moment().utcOffset(), 'minutes').utcOffset()*60;
+
+	timezone(timestamp) {
+		if (timestamp !== undefined) {
+			return moment(timestamp*1000).add(moment(timestamp*1000).utcOffset(), 'minutes').utcOffset()*60;
+		} else {
+			return moment().add(moment().utcOffset(), 'minutes').utcOffset()*60;
 		}
 	},
 
-	dateChanged: function(evt, obj)
-	{
-		var time1, time2;
-		if(obj.date1 !== undefined)
-		{
+	dateChanged(evt, obj) {
+		let time1, time2;
+		if (obj.date1 !== undefined) {
 			let unixTime = obj.date1.valueOf()/1000;
-				unixTime = unixTime + this.timezone(unixTime);
+			unixTime = unixTime + this.timezone(unixTime);
 
-			time1 = window.moment.utc(unixTime*1000).unix();
+			time1 = moment.utc(unixTime*1000).unix();
 			this.set('startDate', time1);
 		}
 
-		if(obj.date2 !== undefined)
-		{
+		if (obj.date2 !== undefined) {
 			let unixTime = obj.date2.valueOf()/1000;
-				unixTime = unixTime + this.timezone(unixTime);
+			unixTime = unixTime + this.timezone(unixTime);
 
-			time2 = window.moment.utc(unixTime*1000).endOf('day').unix();
+			time2 = moment.utc(unixTime*1000).endOf('day').unix();
 			this.set('endDate', time2);
 		}
 
 		this.sendAction('onChange', time1, time2);
 	},
 
-	teardown: Ember.on('willDestroyElement', function()
-	{
-		if(!Ember.isNone(this.get('_picker')))
-		{
+	teardown: Ember.on('willDestroyElement', function() {
+		if (!Ember.isNone(this.get('_picker'))) {
 			this.get('_picker').data('dateRangePicker').destroy();
 		}
 	}),
 
-	toggle: function()
-	{
-		if(!Ember.isNone(this.get('_picker')))
-		{
-			if(this.get('isOpen'))
-			{
+	toggle() {
+		if (!Ember.isNone(this.get('_picker'))) {
+			if (this.get('isOpen')) {
 				this.get('_picker').data('dateRangePicker').close();
-			}
-			else
-			{
+			} else {
 				this.get('_picker').data('dateRangePicker').open();
 			}
 		}
 	},
 
 	actions: {
-
-		containerOpenClose: function()
-		{
-			if(this.get('allowOpen') || !this.get('showButton'))
-			{
+		containerOpenClose() {
+			if (this.get('allowOpen') || !this.get('showButton')) {
 				this.toggle();
 			}
 		},
 
-		openClose: function()
-		{
+		openClose() {
 			this.toggle();
-		},
+		}
 	}
 });
