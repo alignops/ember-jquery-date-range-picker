@@ -116,8 +116,9 @@ export default Ember.Component.extend({
 		if (!Ember.isNone(this.get('beforeShowDay'))) {
 			Ember.assert('beforeShowDay must be a function that returns an array [isSelectable, className, option tooltip]', typeof this.get('beforeShowDay') === 'function');
 
-			opts.beforeShowDay = () => {
-				return this.get('beforeShowDay').apply(this.get('targetObject'), arguments);
+			const _this = this;
+			opts.beforeShowDay = function() {
+				return _this.get('beforeShowDay').apply(_this.get('targetObject'), arguments);
 			};
 		}
 
