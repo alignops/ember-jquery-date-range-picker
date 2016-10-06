@@ -63,7 +63,7 @@ export default Ember.Component.extend({
 		return false;
 	}),
 
-	startTimeString: Ember.computed('start', function() {
+	startTimeString: Ember.computed('startDate', function() {
 		let time = '';
 		if (!Ember.isNone(this.get('startDate'))) {
 			time = moment.utc(this.get('startDate')*1000).format(this.get('format'));
