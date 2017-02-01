@@ -6,20 +6,11 @@ moduleForComponent('jq-date-picker', 'Integration | Component | jq date picker',
 });
 
 test('it renders', function(assert) {
-  
+
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });" + EOL + EOL +
 
   this.render(hbs`{{jq-date-picker}}`);
 
   assert.equal(this.$().text().trim(), '');
-
-  // Template block usage:" + EOL +
-  this.render(hbs`
-    {{#jq-date-picker}}
-      template block text
-    {{/jq-date-picker}}
-  `);
-
-  assert.equal(this.$().text().trim(), 'template block text');
 });
