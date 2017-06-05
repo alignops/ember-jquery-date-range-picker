@@ -134,10 +134,14 @@ export default Ember.Component.extend({
 			}
 		})
 		.bind('datepicker-closed', () => {
-			this.set('isOpen', false);
+			if (!this.get('isDestroyed')) {
+				this.set('isOpen', false);
+			}
 		})
 		.bind('datepicker-opened', () => {
-			this.set('isOpen', true);
+			if (!this.get('isDestroyed')) {
+				this.set('isOpen', true);
+			}
 		});
 
 		this.convertTimeToVal(_pickerElement, this.get('startDate'), this.get('endDate'));
@@ -168,24 +172,26 @@ export default Ember.Component.extend({
 	},
 
 	dateChanged(evt, obj) {
-		let time1, time2;
-		if (obj.date1 !== undefined) {
-			let unixTime = obj.date1.valueOf()/1000;
-			unixTime = unixTime + this.timezone(unixTime);
+		if (!this.get('isDestroyed')) {
+			let time1, time2;
+			if (obj.date1 !== undefined) {
+				let unixTime = obj.date1.valueOf()/1000;
+				unixTime = unixTime + this.timezone(unixTime);
 
-			time1 = moment.utc(unixTime*1000).unix();
-			this.set('startDate', time1);
+				time1 = moment.utc(unixTime*1000).unix();
+				this.set('startDate', time1);
+			}
+
+			if (obj.date2 !== undefined) {
+				let unixTime = obj.date2.valueOf()/1000;
+				unixTime = unixTime + this.timezone(unixTime);
+
+				time2 = moment.utc(unixTime*1000).endOf('day').unix();
+				this.set('endDate', time2);
+			}
+
+			this.sendAction('onChange', time1, time2);
 		}
-
-		if (obj.date2 !== undefined) {
-			let unixTime = obj.date2.valueOf()/1000;
-			unixTime = unixTime + this.timezone(unixTime);
-
-			time2 = moment.utc(unixTime*1000).endOf('day').unix();
-			this.set('endDate', time2);
-		}
-
-		this.sendAction('onChange', time1, time2);
 	},
 
 	teardown: Ember.on('willDestroyElement', function() {
