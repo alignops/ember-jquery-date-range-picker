@@ -1,8 +1,13 @@
-import Ember from 'ember';
+import { assert } from '@ember/debug';
+import { on } from '@ember/object/evented';
+import { isNone } from '@ember/utils';
+import { htmlSafe } from '@ember/string';
+import { computed } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../templates/components/jq-date-picker';
 import moment from 'moment';
 
-export default Ember.Component.extend({
+export default Component.extend({
 	classNames: ['js-date-picker'],
 	classNameBindings: ['isDateRange::single'],
 
@@ -45,41 +50,41 @@ export default Ember.Component.extend({
 	stickyMonths: false,
 	_picker: null,
 
-	inputStyle: Ember.computed('isDateRange', function() {
+	inputStyle: computed('isDateRange', function() {
 		let css = 'position:absolute;visibility:hidden;height:100%;left:0;';
 		if (this.get('isDateRange')) {
 			css += 'width:100%;';
 		} else {
 			css += 'width: 275px;';
 		}
-		return Ember.String.htmlSafe(css);
+		return htmlSafe(css);
 	}),
 
-	isDateRange: Ember.computed('startDate', 'endDate', function() {
-		if (!Ember.isNone(this.get('startDate')) && !Ember.isNone(this.get('endDate'))) {
+	isDateRange: computed('startDate', 'endDate', function() {
+		if (!isNone(this.get('startDate')) && !isNone(this.get('endDate'))) {
 			this.set('showTime', false);
 			return true;
 		}
 		return false;
 	}),
 
-	startTimeString: Ember.computed('startDate', function() {
+	startTimeString: computed('startDate', function() {
 		let time = '';
-		if (!Ember.isNone(this.get('startDate'))) {
+		if (!isNone(this.get('startDate'))) {
 			time = moment.utc(this.get('startDate')*1000).format(this.get('format'));
 		}
 		return time;
 	}),
 
-	endTimeString: Ember.computed('endDate', function() {
+	endTimeString: computed('endDate', function() {
 		let time = '';
-		if (!Ember.isNone(this.get('endDate'))) {
+		if (!isNone(this.get('endDate'))) {
 			time = moment.utc(this.get('endDate')*1000).format(this.get('format'));
 		}
 		return time;
 	}),
 
-	setup: Ember.on('didInsertElement', function() {
+	setup: on('didInsertElement', function() {
 		const _pickerElement = this.$().find('input');
 		this.set('_picker', _pickerElement);
 
@@ -97,24 +102,24 @@ export default Ember.Component.extend({
 			}
 		};
 
-		if (!Ember.isNone(this.get('minDate'))) {
+		if (!isNone(this.get('minDate'))) {
 			opts.startDate = moment.utc(this.get('minDate')*1000).format(this.get('format'));
 		}
 
-		if (!Ember.isNone(this.get('minDays'))) {
+		if (!isNone(this.get('minDays'))) {
 			opts.minDays = this.get('minDays');
 		}
 
-		if (!Ember.isNone(this.get('maxDate'))) {
+		if (!isNone(this.get('maxDate'))) {
 			opts.endDate = moment.utc(this.get('maxDate')*1000).format(this.get('format'));
 		}
 
-		if (!Ember.isNone(this.get('maxDays'))) {
+		if (!isNone(this.get('maxDays'))) {
 			opts.maxDays = this.get('maxDays');
 		}
 
-		if (!Ember.isNone(this.get('beforeShowDay'))) {
-			Ember.assert('beforeShowDay must be a function that returns an array [isSelectable, className, option tooltip]', typeof this.get('beforeShowDay') === 'function');
+		if (!isNone(this.get('beforeShowDay'))) {
+			assert('beforeShowDay must be a function that returns an array [isSelectable, className, option tooltip]', typeof this.get('beforeShowDay') === 'function');
 
 			const _this = this;
 			opts.beforeShowDay = function() {
@@ -194,14 +199,14 @@ export default Ember.Component.extend({
 		}
 	},
 
-	teardown: Ember.on('willDestroyElement', function() {
-		if (!Ember.isNone(this.get('_picker'))) {
+	teardown: on('willDestroyElement', function() {
+		if (!isNone(this.get('_picker'))) {
 			this.get('_picker').data('dateRangePicker').destroy();
 		}
 	}),
 
 	toggle() {
-		if (!Ember.isNone(this.get('_picker'))) {
+		if (!isNone(this.get('_picker'))) {
 			if (this.get('isOpen')) {
 				this.get('_picker').data('dateRangePicker').close();
 			} else {
