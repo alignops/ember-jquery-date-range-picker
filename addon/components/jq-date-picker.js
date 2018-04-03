@@ -1,5 +1,4 @@
 import { assert } from '@ember/debug';
-import { on } from '@ember/object/evented';
 import { isNone } from '@ember/utils';
 import { htmlSafe } from '@ember/string';
 import { computed } from '@ember/object';
@@ -84,7 +83,9 @@ export default Component.extend({
 		return time;
 	}),
 
-	setup: on('didInsertElement', function() {
+	didInsertElement() {
+		this._super(...arguments);
+
 		const _pickerElement = this.$().find('input');
 		this.set('_picker', _pickerElement);
 
@@ -150,7 +151,7 @@ export default Component.extend({
 		});
 
 		this.convertTimeToVal(_pickerElement, this.get('startDate'), this.get('endDate'));
-	}),
+	},
 
 	convertTimeToVal(el, start, end) {
 		let startTime = '';
@@ -195,15 +196,17 @@ export default Component.extend({
 				this.set('endDate', time2);
 			}
 
-			this.sendAction('onChange', time1, time2);
+			this.sendAction('onChange', time1, time2); // eslint-disable-line ember/closure-actions
 		}
 	},
 
-	teardown: on('willDestroyElement', function() {
+	willDestroyElement() {
+		this._super(...arguments);
+
 		if (!isNone(this.get('_picker'))) {
 			this.get('_picker').data('dateRangePicker').destroy();
 		}
-	}),
+	},
 
 	toggle() {
 		if (!isNone(this.get('_picker'))) {
