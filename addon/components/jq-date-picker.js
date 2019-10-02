@@ -86,7 +86,7 @@ export default Component.extend({
 	didInsertElement() {
 		this._super(...arguments);
 
-		const _pickerElement = this.$().find('input');
+		const _pickerElement = this.element.addEventListener('input');
 		this.set('_picker', _pickerElement);
 
 		var opts = {
